@@ -90,7 +90,7 @@
         /* Loader animation */
         .loader {
             display: none;
-            margin: 20px auto;
+            margin: 10px auto;
             border: 6px solid #f3f3f3;
             border-top: 6px solid #4CAF50;
             border-radius: 50%;
@@ -102,6 +102,31 @@
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+
+        /* Summary box */
+        #summary-box {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-align: left;
+            display: none;
+        }
+
+        #summary-box h2 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        #copy-btn {
+            background: #007BFF;
+            margin-top: 10px;
+        }
+        #copy-btn:hover {
+            background: #0069d9;
         }
     </style>
 </head>
@@ -132,7 +157,17 @@
     {% endif %}
 
     {% if results %}
+        <!-- Summary placeholder (above articles) -->
+        <div id="summary-box">
+            <h2>Summary</h2>
+            <div class="loader" id="summary-loader"></div>
+            <p id="summary-text"></p>
+            <button id="copy-btn" onclick="copySummary()">Copy Summary</button>
+        </div>
+
         <h2>Articles</h2>
+        <button onclick="getSummary('{{ profile.id }}')">Get Summary</button>
+        
         <table>
             <tr>
                 <th>Title</th>
@@ -152,6 +187,41 @@
     <script>
         function showLoader() {
             document.getElementById("loader").style.display = "block";
+        }
+
+        async function getSummary(authorId) {
+            const box = document.getElementById("summary-box");
+            const loader = document.getElementById("summary-loader");
+            const text = document.getElementById("summary-text");
+
+            // reset box
+            text.textContent = "";
+            box.style.display = "block";
+            loader.style.display = "block";
+
+            try {
+                const response = await fetch("/summary", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ author_id: authorId })
+});
+
+                const data = await response.json();
+                loader.style.display = "none";
+
+                // Show summary
+                text.textContent = data.summary;
+            } catch (error) {
+                loader.style.display = "none";
+                alert("Error fetching summary: " + error);
+            }
+        }
+
+        function copySummary() {
+            const text = document.getElementById("summary-text").textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                alert("Summary copied to clipboard!");
+            });
         }
     </script>
 </body>

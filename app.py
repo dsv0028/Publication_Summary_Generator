@@ -1,5 +1,5 @@
-from flask import Flask, render_template, request
-from logic import fetch_author_results, safe_get, API_KEY, HL, PAGE_SIZE, FETCH_DELAY
+from flask import Flask, render_template, request, jsonify
+from logic import fetch_author_results, safe_get, generate_author_summary, API_KEY, HL, PAGE_SIZE, FETCH_DELAY
 
 app = Flask(__name__)
 
@@ -21,6 +21,7 @@ def index():
     for article in data.get("articles", [])
 ]
             profile = {
+    "id": author_id,
     "name": safe_get(data, "author", "name", default="N/A"),
     "affiliations": safe_get(data, "author", "affiliations", default="N/A"),
     "email": safe_get(data, "author", "email", default="N/A"),
@@ -37,6 +38,20 @@ def index():
 }
 
     return render_template("index.html", results=results, profile=profile)
+
+@app.route("/summary", methods=["POST"])
+def summary():
+    data = request.get_json(silent=True)
+    author_id = data.get("author_id") if data else None
+    if not author_id:
+        return jsonify({"error": "Missing author_id"}), 400
+
+    try:
+        summary_text = generate_author_summary(api_key=API_KEY, author_id=author_id)
+    except Exception as e:
+        summary_text = f"Error generating summary: {e}"
+
+    return jsonify({"summary": summary_text})
 
 if __name__ == "__main__":
     app.run(debug=True)
