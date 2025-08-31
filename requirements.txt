@@ -1,3 +1,4 @@
 flask
-scholarly
 gunicorn
+serpapi
+pandas
