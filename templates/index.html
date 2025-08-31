@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Author Search</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f7fa;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: 20px;
+            color: #333;
+        }
+
+        form {
+            margin: 20px auto;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            width: 300px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            background: #4CAF50;
+            color: white;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+
+        .profile-card {
+            max-width: 500px;
+            margin: 30px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-align: left;
+        }
+
+        .profile-card img {
+            float: right;
+            border-radius: 50%;
+        }
+
+        table {
+            margin: 20px auto;
+            width: 90%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        table th, table td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        table th {
+            background: #4CAF50;
+            color: white;
+        }
+
+        table tr:hover {
+            background: #f1f1f1;
+        }
+
+        /* Loader animation */
+        .loader {
+            display: none;
+            margin: 20px auto;
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #4CAF50;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <h1>Author Search</h1>
+    <form action="/" method="post" onsubmit="showLoader()">
+        <input type="text" name="author_id" placeholder="Enter Author ID" required>
+        <button type="submit">Search</button>
+    </form>
+
+    <div class="loader" id="loader"></div>
+
+    {% if profile %}
+        <h2>Author Profile</h2>
+        <div class="profile-card">
+            {% if profile.thumbnail %}
+                <img src="{{ profile.thumbnail }}" alt="Profile Picture" width="100">
+            {% endif %}
+            <p><strong>Name:</strong> {{ profile.name }}</p>
+            <p><strong>Affiliation:</strong> {{ profile.affiliations }}</p>
+            <p><strong>Email:</strong> {{ profile.email }}</p>
+            <p><strong>Interests:</strong> {{ profile.interests | join(', ') }}</p>
+            <p><strong>Citations:</strong> {{ profile.citations_all }} (since 2020: {{ profile.citations_recent }})</p>
+            <p><strong>H-index:</strong> {{ profile.h_index }} (recent: {{ profile.h_index_recent }})</p>
+            <p><strong>i10-index:</strong> {{ profile.i10_index }} (recent: {{ profile.i10_index_recent }})</p>
+            <p><strong>Open Access:</strong> {{ profile.open_access_available }} available, {{ profile.open_access_not_available }} not available</p>
+        </div>
+    {% endif %}
+
+    {% if results %}
+        <h2>Articles</h2>
+        <table>
+            <tr>
+                <th>Title</th>
+                <th>Year</th>
+                <th>Citations</th>
+            </tr>
+            {% for article in results %}
+                <tr>
+                    <td>{{ article.title }}</td>
+                    <td>{{ article.year }}</td>
+                    <td>{{ article.citations }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+
+    <script>
+        function showLoader() {
+            document.getElementById("loader").style.display = "block";
+        }
+    </script>
+</body>
+</html>
