@@ -7,7 +7,7 @@ HL = "en"
 PAGE_SIZE = 20
 FETCH_DELAY = 0.8
 
-genai.configure(api_key="AIzaSyDc0yJC6JV3DidwdvyXlL-8iQlMjfxS0f4") 
+genai.configure(api_key="AIzaSyDcJC6JV3DidwdvyXlL-8iQlMjfxS0f4") 
 model = genai.GenerativeModel('gemini-1.5-flash-latest')
 
 
