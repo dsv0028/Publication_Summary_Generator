@@ -2,7 +2,7 @@ import time
 from serpapi import GoogleSearch
 import google.generativeai as genai
 
-API_KEY = "daf8b5b7b49a653e8ab557d4b5cab8b3737269703389193f6fd5cad180fe83b8"
+API_KEY = "daf8b5b7b49a653e8ab557d4b5cab8b3737269703389193d5cad180fe83b8"
 HL = "en"
 PAGE_SIZE = 20
 FETCH_DELAY = 0.8
