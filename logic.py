@@ -2,12 +2,12 @@ import time
 from serpapi import GoogleSearch
 import google.generativeai as genai
 
-API_KEY = "daf8b5b7b49a653e8ab557d4b5cab8b3737269703389193d5cad180fe83b8"
+API_KEY = "API Key"
 HL = "en"
 PAGE_SIZE = 20
 FETCH_DELAY = 0.8
 
-genai.configure(api_key="AIzaSyDcJC6JV3DidwdvyXlL-8iQlMjfxS0f4") 
+genai.configure(api_key="API key") 
 model = genai.GenerativeModel('gemini-1.5-flash-latest')
 
 
